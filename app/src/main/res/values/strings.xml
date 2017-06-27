@@ -6,4 +6,6 @@
     <string name="intent_scheme">oauth</string>
     <string name="intent_host">cprest</string>
 
+    <string name="my_hint">Write your tweet...</string>
+
 </resources>

@@ -23,8 +23,8 @@ import com.loopj.android.http.RequestParams;
 public class TwitterClient extends OAuthBaseClient {
 	public static final BaseApi REST_API_INSTANCE = TwitterApi.instance(); // Change this
 	public static final String REST_URL = "https://api.twitter.com/1.1"; // Change this, base API URL
-	public static final String REST_CONSUMER_KEY = "lSOrvEGR7rd2iWdX1wNmDy1yu";       // Change this
-	public static final String REST_CONSUMER_SECRET = "OIZ51SQleb5amHQWPW35PSk6v0ElwSCS8yaEiz9h66ACC6kls6"; // Change this
+	public static final String REST_CONSUMER_KEY = "dKLsuLSpeSBsMEET2HLTjYdbP";       // Change this
+	public static final String REST_CONSUMER_SECRET = "MLpJ8Vo1KNHfCAFfQp6rUKiJJY970PpLt3NIfYwnwcEWj2S5KY"; // Change this
 
 	// Landing page to indicate the OAuth flow worked in case Chrome for Android 25+ blocks navigation back to the app.
 	public static final String FALLBACK_URL = "https://codepath.github.io/android-rest-client-template/success.html";
@@ -40,8 +40,7 @@ public class TwitterClient extends OAuthBaseClient {
 				String.format(REST_CALLBACK_URL_TEMPLATE, context.getString(R.string.intent_host),
 						context.getString(R.string.intent_scheme), context.getPackageName(), FALLBACK_URL));
 	}
-	// CHANGE THIS
-	// DEFINE METHODS for different API endpoints here
+	// get timeline
 	public void getHomeTimeline(AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		// Can specify query string params directly or through RequestParams.
@@ -51,6 +50,16 @@ public class TwitterClient extends OAuthBaseClient {
 
 		client.get(apiUrl, params, handler);
 	}
+
+	public void sendTweet(String message, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/update.json");
+		// Can specify query string params directly or through RequestParams.
+		RequestParams params = new RequestParams();
+		params.put("status", message);
+
+		client.post(apiUrl, params, handler);
+	}
+
 
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
 	 * 	  i.e getApiUrl("statuses/home_timeline.json");
