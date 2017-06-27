@@ -44,6 +44,9 @@ public class TimelineActivity extends AppCompatActivity {
     // reference for possible newTweet;
     private Tweet newTweet;
 
+    // reference for possible newTweet;
+    private final int RESULT_OK = 10;
+
 
 
     @Override
@@ -97,7 +100,7 @@ public class TimelineActivity extends AppCompatActivity {
         // REQUEST_CODE is defined above
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             // Extract name value from result extras
-            newTweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
+            newTweet = (Tweet) Parcels.unwrap(intent.getParcelableExtra(Tweet.class.getSimpleName()));
 
             tweets.add(0, newTweet);
             adapter.notifyItemInserted(0);

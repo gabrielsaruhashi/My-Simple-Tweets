@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +26,10 @@ public class ComposeActivity extends AppCompatActivity {
     private TwitterClient client;
     private EditText tentativeMessage;
     private Tweet newTweet;
+    // reference for possible newTweet;
+    private final int RESULT_OK = 10;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,7 @@ public class ComposeActivity extends AppCompatActivity {
 
         client = TwitterApplication.getRestClient();
         btTweet = (Button) findViewById(R.id.btTweet);
+        tentativeMessage =  (EditText) findViewById(R.id.etTweetBody);
 
     }
 
@@ -86,11 +92,32 @@ public class ComposeActivity extends AppCompatActivity {
 
 
     public void onSubmit(View v) {
-        tentativeMessage = (EditText) findViewById(R.id.etTweetBody);
+        
         Log.i("Hey", tentativeMessage.getText().toString());
         postTweet(tentativeMessage.getText().toString());
 
     }
+
+    tentativeMessage.addTextChangedListener(new TextWatcher() {
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // Fires right as the text is being changed (even supplies the range of text)
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count,
+        int after) {
+            // Fires right before text is changing
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // Fires right after the text has changed
+            tvDisplay.setText(s.toString());
+        }
+
+    });
 
 
 }
