@@ -28,4 +28,14 @@
         android:layout_marginTop="163dp"
         android:onClick="onSubmit"
         android:text="Tweet" />
+
+    <TextView
+        android:id="@+id/tvCharCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="11dp"
+        android:text="140"
+        tools:text="TextView" />
 </RelativeLayout>
