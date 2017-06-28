@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.view.View;
@@ -40,9 +41,11 @@ public class TweetDetailsActivity extends AppCompatActivity {
     @BindView(R.id.tvRetweetCount) TextView tvRetweetCount;
     @BindView(R.id.tvFavoriteCount) TextView tvFavoriteCount;
     @BindView(R.id.ivFavorite) ImageView ivFavorite;
+    @BindView(R.id.ivRetweet) ImageView ivRetweet;
+    boolean favorited;
+    boolean retweeted;
     String imageUrl;
-    // clicker for favourite
-    boolean clicked;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,21 +66,41 @@ public class TweetDetailsActivity extends AppCompatActivity {
         tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
         tvRetweetCount.setText(Integer.toString(tweet.retweetCount));
         tvFavoriteCount.setText(Integer.toString(tweet.favouriteCount));
+
+        // booleans for color picking
+        favorited = tweet.favorited;
+        retweeted = tweet.retweeted;
+
         // load image using glide
         Glide.with(TweetDetailsActivity.this)
                 .load(imageUrl)
                 .bitmapTransform(new RoundedCornersTransformation(TweetDetailsActivity.this, 15, 0))
                 .into(ivProfileImage);
 
+        if (favorited) {
+            ivFavorite.setColorFilter(ContextCompat.getColor(TweetDetailsActivity.this,R.color.medium_green));
+        } else {
+            ivFavorite.setColorFilter(ContextCompat.getColor(TweetDetailsActivity.this,R.color.medium_gray_50));
+        }
+
+        if (retweeted) {
+            ivRetweet.setColorFilter(ContextCompat.getColor(TweetDetailsActivity.this,R.color.medium_green));
+        } else {
+            ivRetweet.setColorFilter(ContextCompat.getColor(TweetDetailsActivity.this,R.color.medium_gray_50));
+        }
+
+
         ivFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(clicked) {
+                if(favorited) {
                     toUnfavorite(tweet.uid);
-                    clicked = false;
+                    favorited = false;
+                    ivFavorite.setColorFilter(ContextCompat.getColor(TweetDetailsActivity.this,R.color.medium_gray_50));
                 } else {
                     toFavorite(tweet.uid);
-                    clicked = true;
+                    favorited = true;
+                    ivFavorite.setColorFilter(ContextCompat.getColor(TweetDetailsActivity.this,R.color.medium_green));
                 }
             }
         });
@@ -111,6 +134,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
                 try {
                     Tweet updatedTweet = Tweet.fromJSON(response);
                     tvRetweetCount.setText(Integer.toString(updatedTweet.retweetCount));
+                    ivRetweet.setColorFilter(ContextCompat.getColor(TweetDetailsActivity.this,R.color.medium_green));
                 }  catch (JSONException e) {
                     e.printStackTrace();
                 }
