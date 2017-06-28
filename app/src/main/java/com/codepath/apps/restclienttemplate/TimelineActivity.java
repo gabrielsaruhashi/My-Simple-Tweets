@@ -30,25 +30,18 @@ public class TimelineActivity extends AppCompatActivity {
 
     // create reference for twitter client
     private TwitterClient client;
-
     // list of tweets
     ArrayList<Tweet> tweets;
-
     // recycler view
     RecyclerView rvTweets;
-
     // the adapter wired to the new view
     TweetAdapter adapter;
-
     // REQUEST_CODE can be any value we like, used to determine the result type later
     private final int REQUEST_CODE = 20;
-
     // reference for possible newTweet;
     private Tweet newTweet;
-
     // reference for possible newTweet;
     private final int RESULT_OK = 10;
-
     // setup swipe thing
     private SwipeRefreshLayout swipeContainer;
 
@@ -96,22 +89,6 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
 
-        /* add the reply click listener
-        ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
-                new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Tweet tweet = tweets.get(position);
-                        String screenName = tweet.user.screenName;
-                        // create intent for the new activity
-                        Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
-                        intent.putExtra(User.class.getSimpleName(), Parcels.wrap(tweet));
-                        // show the activity
-                        startActivityForResult(intent, REQUEST_CODE);
-                    }
-                }
-        );
-        */
 
         // add line divider decorator
         RecyclerView.ItemDecoration itemDecoration = new

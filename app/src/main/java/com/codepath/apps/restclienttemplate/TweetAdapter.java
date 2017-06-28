@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
+import org.parceler.Parcels;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,13 +28,10 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
  */
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
-
     // list of tweets
     ArrayList<Tweet> tweets;
-
     // pass in the Tweets array in the constructor
     public TweetAdapter(ArrayList<Tweet> tweets) { this.tweets = tweets; };
-
     // initialize context
     Context context;
 
@@ -61,12 +60,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         String imageUrl = tweet.user.profileImageUrl;
         holder.tvUserName.setText(tweet.user.name);
         holder.tvBody.setText(tweet.body);
-
         holder.tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
         holder.tvName.setText('@' + tweet.user.screenName);
-
-
-
 
         // load image using glide
         Glide.with(context)
@@ -74,7 +69,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 .bitmapTransform(new RoundedCornersTransformation(context, 15, 0))
 
                 .into(holder.ivProfileImage);
-
     }
 
     @Override
@@ -103,14 +97,38 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             ivReply = (ImageView) itemView.findViewById(R.id.ivReply);
 
+            // for reply activity
             ivReply.setOnClickListener(this);
+
+            // for details activity
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(context, ComposeActivity.class);
-            intent.putExtra("Screen Name", tvName.getText().toString());
-            context.startActivity(intent);
+            // set up switch to manage the different click listeners
+            switch (v.getId()) {
+                // when reply is clicked
+                case R.id.ivReply:
+                    Intent intentReply = new Intent(context, ComposeActivity.class);
+                    intentReply.putExtra("Screen Name", tvName.getText().toString());
+                    context.startActivity(intentReply);
+                    break;
+                // when itemView click
+                default:
+                    // gets item position
+                    int position = getAdapterPosition();
+                    // make sure the position is valid, i.e. actually exists in the view
+                    if (position != RecyclerView.NO_POSITION) {
+                        // get the tweet at the position, this won't work if the class is static
+                        Tweet tweet = tweets.get(position);
+                        Intent intentDetail = new Intent(context, TweetDetailsActivity.class);
+
+                        intentDetail.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+                        context.startActivity(intentDetail);
+                    }
+                    break;
+            }
         }
     }
 
