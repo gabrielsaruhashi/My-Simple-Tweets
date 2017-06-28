@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
-import com.codepath.apps.restclienttemplate.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -29,6 +28,7 @@ public class ComposeActivity extends AppCompatActivity {
     private TwitterClient client;
     private EditText tentativeMessage;
     private Tweet newTweet;
+    private String screenName;
 
     // char count
     private TextView tvCharCount;
@@ -47,15 +47,11 @@ public class ComposeActivity extends AppCompatActivity {
         btTweet = (Button) findViewById(R.id.btTweet);
         tentativeMessage =  (EditText) findViewById(R.id.etTweetBody);
         tvCharCount = (TextView) findViewById(R.id.tvCharCount);
+        screenName = (String) getIntent().getStringExtra("Screen Name");
 
-        Tweet testTweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra(User.class.getSimpleName()));
-        final String screenName = testTweet.user.screenName;
-
-        // final String screenName = (String) Parcels.unwrap(getIntent().getParcelableExtra(User.class.getSimpleName()));
-        Log.i("Screen Name", screenName);
 
         if (screenName != null) {
-            tentativeMessage.setText('@' + screenName);
+            tentativeMessage.setText(screenName);
         }
 
         // add text listner

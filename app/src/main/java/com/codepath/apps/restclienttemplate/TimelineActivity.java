@@ -9,12 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.DividerItemDecoration;
 import com.codepath.apps.restclienttemplate.models.Tweet;
-import com.codepath.apps.restclienttemplate.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -98,7 +96,7 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
 
-        // add the reply click listener
+        /* add the reply click listener
         ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
@@ -113,6 +111,7 @@ public class TimelineActivity extends AppCompatActivity {
                     }
                 }
         );
+        */
 
         // add line divider decorator
         RecyclerView.ItemDecoration itemDecoration = new

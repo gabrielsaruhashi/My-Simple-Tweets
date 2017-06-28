@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -82,7 +83,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     }
 
     // creates ViewHolder class
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         // track view objects
         public ImageView ivProfileImage;
@@ -90,21 +91,26 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public TextView tvBody;
         public TextView tvRelativeTime;
         public TextView tvName;
+        public ImageView ivReply;
 
         public ViewHolder(View itemView) {
-
             super(itemView);
-
             // lookup objects by view
             ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
             tvUserName = (TextView) itemView.findViewById(R.id.tvUserName);
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvRelativeTime = (TextView) itemView.findViewById(R.id.tvRelativeTime);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
+            ivReply = (ImageView) itemView.findViewById(R.id.ivReply);
 
+            ivReply.setOnClickListener(this);
+        }
 
-
-
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(context, ComposeActivity.class);
+            intent.putExtra("Screen Name", tvName.getText().toString());
+            context.startActivity(intent);
         }
     }
 
