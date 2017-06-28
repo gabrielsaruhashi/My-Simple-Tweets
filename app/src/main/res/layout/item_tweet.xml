@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="7dp"
-    android:layout_height="wrap_content">
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/ivProfileImage"
@@ -17,39 +19,43 @@
         android:id="@+id/tvUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/tvBody" />
+        android:layout_alignStart="@+id/tvBody"
+        android:text="TextView" />
 
     <TextView
         android:id="@+id/tvBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/ivProfileImage"
+
         android:layout_below="@+id/tvUserName"
         android:layout_marginLeft="5dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:text="TextView" />
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#FF00FF00"
-        android:id="@+id/view" />
 
     <TextView
         android:id="@+id/tvRelativeTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/view"
         android:text="TextView" />
 
     <TextView
         android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:layout_toEndOf="@+id/tvUserName"
-        android:layout_below="@+id/view" />
+        android:text="TextView" />
+
+    <ImageView
+        android:id="@+id/ivReply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/etTweetBody"
+        android:layout_below="@id/tvRelativeTime"
+        android:layout_alignRight="@id/tvRelativeTime"
+
+        app:srcCompat="@drawable/ic_reply"
+        tools:ignore="VectorDrawableCompat" />
 </RelativeLayout>

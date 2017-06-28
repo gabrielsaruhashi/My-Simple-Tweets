@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.models.DividerItemDecoration;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -112,6 +113,11 @@ public class TimelineActivity extends AppCompatActivity {
                     }
                 }
         );
+
+        // add line divider decorator
+        RecyclerView.ItemDecoration itemDecoration = new
+                DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
+        rvTweets.addItemDecoration(itemDecoration);
 
         populateTimeline();
 
