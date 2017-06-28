@@ -3,12 +3,16 @@ package com.codepath.apps.restclienttemplate;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.text.ParseException;
@@ -17,6 +21,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class TweetDetailsActivity extends AppCompatActivity {
@@ -32,6 +37,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
     @BindView(R.id.tvName) TextView tvName;
     @BindView(R.id.tvBody) TextView tvBody;
     @BindView(R.id.tvRelativeTime) TextView tvRelativeTime;
+    @BindView(R.id.tvRetweetCount) TextView tvRetweetCount;
     String imageUrl;
 
     @Override
@@ -51,6 +57,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
         tvName.setText(tweet.user.name);
         tvBody.setText(tweet.body);
         tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
+        tvRetweetCount.setText(Integer.toString(tweet.retweetCount));
 
         // load image using glide
         Glide.with(TweetDetailsActivity.this)
@@ -76,6 +83,31 @@ public class TweetDetailsActivity extends AppCompatActivity {
         }
 
         return relativeDate;
+    }
+
+    public void Retweet(long tweetId) {
+        // retweets
+        client.doRetweet(tweetId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    Tweet updatedTweet = Tweet.fromJSON(response);
+                    tvRetweetCount.setText(Integer.toString(updatedTweet.retweetCount));
+                }  catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+            }
+
+        });
+    }
+
+    public void onRetweeting(View v) {
+        Retweet(tweet.uid);
     }
 
 }

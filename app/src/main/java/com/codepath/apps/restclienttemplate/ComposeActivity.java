@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -128,10 +127,7 @@ public class ComposeActivity extends AppCompatActivity {
 
 
     public void onSubmit(View v) {
-
-        Log.i("Hey", tentativeMessage.getText().toString());
         postTweet(tentativeMessage.getText().toString());
-
     }
 
 

@@ -14,7 +14,8 @@ public class Tweet {
     public String body;
     public long uid; // databse ID for the tweet
     public String createdAt;
-
+    public int retweetCount;
+    public int favouriteCount;
     public User user;
 
     // deserialize the JSON
@@ -25,6 +26,8 @@ public class Tweet {
         tweet.uid = jsonObject.getLong("id");
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+        tweet.retweetCount = jsonObject.getInt("retweet_count");
+        tweet.favouriteCount = jsonObject.getInt("favorite_count");
         return tweet;
     }
 
