@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
-public class TweetDetailsActivity extends AppCompatActivity {
+public class TweetDetailsActivity extends AppCompatActivity  {
 
     // the movie to display
     Tweet tweet;
@@ -38,6 +38,8 @@ public class TweetDetailsActivity extends AppCompatActivity {
     @BindView(R.id.tvBody) TextView tvBody;
     @BindView(R.id.tvRelativeTime) TextView tvRelativeTime;
     @BindView(R.id.tvRetweetCount) TextView tvRetweetCount;
+    @BindView(R.id.tvFavoriteCount) TextView tvFavoriteCount;
+    @BindView(R.id.ivFavorite) ImageView ivFavorite;
     String imageUrl;
 
     @Override
@@ -58,12 +60,14 @@ public class TweetDetailsActivity extends AppCompatActivity {
         tvBody.setText(tweet.body);
         tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
         tvRetweetCount.setText(Integer.toString(tweet.retweetCount));
-
+        tvFavoriteCount.setText(Integer.toString(tweet.favouriteCount));
         // load image using glide
         Glide.with(TweetDetailsActivity.this)
                 .load(imageUrl)
                 .bitmapTransform(new RoundedCornersTransformation(TweetDetailsActivity.this, 15, 0))
                 .into(ivProfileImage);
+
+
 
     }
 
@@ -106,8 +110,31 @@ public class TweetDetailsActivity extends AppCompatActivity {
         });
     }
 
+    public void toFavorite(long tweetId) {
+        client.createFavorite(tweetId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    Tweet updatedTweet = Tweet.fromJSON(response);
+                    tvFavoriteCount.setText(Integer.toString(updatedTweet.favouriteCount));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+            }
+        });
+    }
+
     public void onRetweeting(View v) {
         Retweet(tweet.uid);
+    }
+
+    public void onFavorite(View v) {
+        toFavorite(tweet.uid);
     }
 
 }
