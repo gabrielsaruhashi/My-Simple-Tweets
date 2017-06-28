@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
-public class TweetDetailsActivity extends AppCompatActivity  {
+public class TweetDetailsActivity extends AppCompatActivity {
 
     // the movie to display
     Tweet tweet;
@@ -41,6 +41,8 @@ public class TweetDetailsActivity extends AppCompatActivity  {
     @BindView(R.id.tvFavoriteCount) TextView tvFavoriteCount;
     @BindView(R.id.ivFavorite) ImageView ivFavorite;
     String imageUrl;
+    // clicker for favourite
+    boolean clicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,18 @@ public class TweetDetailsActivity extends AppCompatActivity  {
                 .bitmapTransform(new RoundedCornersTransformation(TweetDetailsActivity.this, 15, 0))
                 .into(ivProfileImage);
 
+        ivFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(clicked) {
+                    toUnfavorite(tweet.uid);
+                    clicked = false;
+                } else {
+                    toFavorite(tweet.uid);
+                    clicked = true;
+                }
+            }
+        });
 
 
     }
@@ -89,7 +103,7 @@ public class TweetDetailsActivity extends AppCompatActivity  {
         return relativeDate;
     }
 
-    public void Retweet(long tweetId) {
+    public void retweet(long tweetId) {
         // retweets
         client.doRetweet(tweetId, new JsonHttpResponseHandler() {
             @Override
@@ -129,12 +143,31 @@ public class TweetDetailsActivity extends AppCompatActivity  {
         });
     }
 
-    public void onRetweeting(View v) {
-        Retweet(tweet.uid);
+    public void toUnfavorite(long tweetId) {
+        client.destroyFavorite(tweetId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    Tweet updatedTweet = Tweet.fromJSON(response);
+                    tvFavoriteCount.setText(Integer.toString(updatedTweet.favouriteCount));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+            }
+        });
     }
 
-    public void onFavorite(View v) {
-        toFavorite(tweet.uid);
+    public void onRetweeting(View v) {
+        retweet(tweet.uid);
     }
+
+//    public void onFavorite(View v) {
+//        toFavorite(tweet.uid);
+//    }
 
 }
