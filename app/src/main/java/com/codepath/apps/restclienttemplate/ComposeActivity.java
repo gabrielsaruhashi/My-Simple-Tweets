@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -32,6 +33,7 @@ public class ComposeActivity extends AppCompatActivity {
     // char count
     private TextView tvCharCount;
 
+
     // reference for possible newTweet;
     private final int RESULT_OK = 10;
     private final int MAX_CHAR = 140;
@@ -46,6 +48,16 @@ public class ComposeActivity extends AppCompatActivity {
         tentativeMessage =  (EditText) findViewById(R.id.etTweetBody);
         tvCharCount = (TextView) findViewById(R.id.tvCharCount);
 
+        Tweet testTweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra(User.class.getSimpleName()));
+        final String screenName = testTweet.user.screenName;
+
+        // final String screenName = (String) Parcels.unwrap(getIntent().getParcelableExtra(User.class.getSimpleName()));
+        Log.i("Screen Name", screenName);
+
+        if (screenName != null) {
+            tentativeMessage.setText('@' + screenName);
+        }
+
         // add text listner
         tentativeMessage.addTextChangedListener(new TextWatcher() {
 
@@ -57,7 +69,7 @@ public class ComposeActivity extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
                                           int after) {
-                // Fires right before text is changing
+
             }
 
             @Override

@@ -9,9 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -81,17 +83,35 @@ public class TimelineActivity extends AppCompatActivity {
         // find the Recycler view
         rvTweets = (RecyclerView) findViewById(rvTweet);
 
-        rvTweets.addItemDecoration(new SimpleDividerItemDecoration(this));
+
+        /* add line divider
+        RecyclerView.ItemDecoration itemDecoration = new
+                DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        rvTweets.addItemDecoration(itemDecoration); */
 
         // initialize the list of tweets
         tweets = new ArrayList<>();
-
         // construct the adater from the data source
         adapter = new TweetAdapter(tweets);
-
         // recycler setup (connect a layout manager and an adapter)
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
+
+        // add the reply click listener
+        ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
+                new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        Tweet tweet = tweets.get(position);
+                        String screenName = tweet.user.screenName;
+                        // create intent for the new activity
+                        Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
+                        intent.putExtra(User.class.getSimpleName(), Parcels.wrap(tweet));
+                        // show the activity
+                        startActivityForResult(intent, REQUEST_CODE);
+                    }
+                }
+        );
 
         populateTimeline();
 

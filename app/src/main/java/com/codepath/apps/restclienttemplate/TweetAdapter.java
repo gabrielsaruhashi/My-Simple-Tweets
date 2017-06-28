@@ -66,6 +66,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
 
 
+
         // load image using glide
         Glide.with(context)
                 .load(imageUrl)
@@ -100,6 +101,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvRelativeTime = (TextView) itemView.findViewById(R.id.tvRelativeTime);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
+
+
+
+
         }
     }
 
