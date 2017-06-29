@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.codepath.apps.restclienttemplate.models.DividerItemDecoration;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -44,7 +43,10 @@ public class TimelineActivity extends AppCompatActivity {
     private final int RESULT_OK = 10;
     // setup swipe thing
     private SwipeRefreshLayout swipeContainer;
-
+    // Store a member variable for the listener
+    private EndlessRecyclerViewScrollListener scrollListener;
+    // store the lowest max id
+    private long lowMaxId;
 
 
     @Override
@@ -75,21 +77,64 @@ public class TimelineActivity extends AppCompatActivity {
         // find the Recycler view
         rvTweets = (RecyclerView) findViewById(rvTweet);
 
-
-        /* add line divider
-        RecyclerView.ItemDecoration itemDecoration = new
-                DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        rvTweets.addItemDecoration(itemDecoration); */
-
         // initialize the list of tweets
         tweets = new ArrayList<>();
         // construct the adater from the data source
         adapter = new TweetAdapter(tweets);
         // recycler setup (connect a layout manager and an adapter)
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvTweets.setLayoutManager(linearLayoutManager);
         rvTweets.setAdapter(adapter);
 
+        /* Infinite Pagination */
+        // Retain an instance so that you can call 'resetState() for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                client.getHomeTimeline(lowMaxId, new JsonHttpResponseHandler() {
 
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+
+                        // iterate through the results
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                // for each entry, deserialize the JSON object
+                                JSONObject json = response.getJSONObject(i);
+
+                                // convert each object to a Tweet model
+                                Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
+
+                                if (i == response.length() - 1) {
+                                    lowMaxId = tweet.uid;
+                                }
+
+                                // add the tweet model to data source
+                                tweets.add(tweet);
+
+                                // notify adapter that we've added an item
+                                adapter.notifyItemInserted(tweets.size() - 1);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.d("OnLoadMore failure",responseString);
+                        throwable.printStackTrace();
+                    }
+                });
+            }
+        };
+
+
+        // adds the scroll listener to RecyclerView
+        rvTweets.addOnScrollListener(scrollListener);
+
+        /**************************/
         // add line divider decorator
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
@@ -98,6 +143,16 @@ public class TimelineActivity extends AppCompatActivity {
         populateTimeline();
 
 
+    }
+
+    // Append the next page of data into the adapter
+    // This method probably sends out a network request and appends new data items to your adapter.
+    public void loadNextDataFromApi(int offset) {
+        // Send an API request to retrieve appropriate paginated data
+        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
+        //  --> Deserialize and construct new model objects from the API response
+        //  --> Append the new data objects to the existing set of items inside the array of items
+        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
     }
 
     // adds the icons in the menu
@@ -154,6 +209,9 @@ public class TimelineActivity extends AppCompatActivity {
                         // convert each object to a Tweet model
                         Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
 
+                        if (i == response.length() - 1) {
+                            lowMaxId = tweet.uid;
+                        }
                         // add the tweet model to data source
                         tweets.add(tweet);
 
@@ -162,12 +220,8 @@ public class TimelineActivity extends AppCompatActivity {
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-
                     }
-
                 }
-
-
             }
 
             @Override
@@ -232,6 +286,22 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.d("DEBUG", "Fetch timeline error: " + e.toString());
             }
         });
+    }
+
+    public String compareIdStrings(String a, String b) {
+        if (a.length() == b.length()) {
+            for (int i = 0; i < a.length(); i++) {
+                if (Character.getNumericValue(a.charAt(i)) > Character.getNumericValue(b.charAt(i))) {
+                    return a;
+                } else {
+                    return b; }
+            }
+
+        } else if (a.length() > b.length()) {
+            return a;
+        } else return b;
+
+        return null;
     }
 }
 

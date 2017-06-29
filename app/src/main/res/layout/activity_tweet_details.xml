@@ -30,7 +30,8 @@
         android:layout_marginLeft="5dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:text="TextView"
-        android:textSize="8sp"/>
+        android:textSize="8sp"
+        android:autoLink="all"/>
 
 
     <TextView

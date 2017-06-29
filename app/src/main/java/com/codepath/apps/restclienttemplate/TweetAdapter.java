@@ -104,6 +104,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
             // for details activity
             itemView.setOnClickListener(this);
+
         }
 
         @Override
@@ -149,7 +150,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
         return relativeDate;
     }
 
