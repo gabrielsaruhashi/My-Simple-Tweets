@@ -63,12 +63,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
         holder.tvName.setText('@' + tweet.user.screenName);
 
-        // load image using glide
+        // load user profile image using glide
         Glide.with(context)
                 .load(imageUrl)
                 .bitmapTransform(new RoundedCornersTransformation(context, 15, 0))
-
                 .into(holder.ivProfileImage);
+
+
     }
 
     @Override
@@ -86,6 +87,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public TextView tvRelativeTime;
         public TextView tvName;
         public ImageView ivReply;
+
 
         public ViewHolder(View itemView) {
             super(itemView);

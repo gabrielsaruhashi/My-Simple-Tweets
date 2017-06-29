@@ -46,6 +46,9 @@ public class TweetDetailsActivity extends AppCompatActivity {
     boolean retweeted;
     String imageUrl;
 
+    String mediaEntityUrl;
+    @BindView(R.id.ivEntityMedia) ImageView ivEntityMedia;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
         tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
         tvRetweetCount.setText(Integer.toString(tweet.retweetCount));
         tvFavoriteCount.setText(Integer.toString(tweet.favouriteCount));
+        mediaEntityUrl = tweet.mediaImageUrl;
 
         // booleans for color picking
         favorited = tweet.favorited;
@@ -76,6 +80,14 @@ public class TweetDetailsActivity extends AppCompatActivity {
                 .load(imageUrl)
                 .bitmapTransform(new RoundedCornersTransformation(TweetDetailsActivity.this, 15, 0))
                 .into(ivProfileImage);
+
+        if (mediaEntityUrl != null) {
+            // load image using glide
+            Glide.with(TweetDetailsActivity.this)
+                    .load(mediaEntityUrl)
+                    .bitmapTransform(new RoundedCornersTransformation(TweetDetailsActivity.this, 15, 0))
+                    .into(ivEntityMedia);
+        }
 
         if (favorited) {
             ivFavorite.setColorFilter(ContextCompat.getColor(TweetDetailsActivity.this,R.color.medium_green));
@@ -97,10 +109,12 @@ public class TweetDetailsActivity extends AppCompatActivity {
                     toUnfavorite(tweet.uid);
                     favorited = false;
                     ivFavorite.setColorFilter(ContextCompat.getColor(TweetDetailsActivity.this,R.color.medium_gray_50));
+                    tweet.favorited = false;
                 } else {
                     toFavorite(tweet.uid);
                     favorited = true;
                     ivFavorite.setColorFilter(ContextCompat.getColor(TweetDetailsActivity.this,R.color.medium_green));
+                    tweet.favorited = true;
                 }
             }
         });

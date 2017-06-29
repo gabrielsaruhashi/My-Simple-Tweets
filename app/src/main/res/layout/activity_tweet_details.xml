@@ -82,5 +82,14 @@
         android:layout_toRightOf="@+id/ivFavorite"
         android:text="TextView" />
 
+    <ImageView
+        android:id="@+id/ivEntityMedia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvBody"
+        android:layout_marginTop="126dp"
+        app:srcCompat="@color/black"
+        android:layout_alignParentStart="true" />
+
 
 </RelativeLayout>
