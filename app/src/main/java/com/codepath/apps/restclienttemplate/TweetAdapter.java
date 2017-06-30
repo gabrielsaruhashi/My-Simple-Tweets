@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -12,7 +13,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.text.ParseException;
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
@@ -34,6 +38,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public TweetAdapter(ArrayList<Tweet> tweets) { this.tweets = tweets; };
     // initialize context
     Context context;
+    // create reference for twitter client
+    private TwitterClient client;
+
 
     // creates and inflates a new view; for each row, inflate the layout and cache references
     // into ViewHolder. Only invoked when you create new row
@@ -41,6 +48,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public TweetAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
+        // initialize the client
+        client = TwitterApplication.getRestClient();
 
         // create the view using the item_tweet layout
         View tweetView = inflater.inflate(R.layout.item_tweet, parent, false);
@@ -62,6 +71,15 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.tvBody.setText(tweet.body);
         holder.tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
         holder.tvName.setText('@' + tweet.user.screenName);
+
+        if (tweet.favorited) {
+            holder.ivFavorite.setColorFilter(ContextCompat.getColor(context,R.color.medium_green));
+        }
+
+        if (tweet.retweeted) {
+            holder.ivRetweet.setColorFilter(ContextCompat.getColor(context,R.color.medium_green));
+        }
+
 
         // load user profile image using glide
         Glide.with(context)
@@ -87,6 +105,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public TextView tvRelativeTime;
         public TextView tvName;
         public ImageView ivReply;
+        public ImageView ivFavorite;
+        public ImageView ivRetweet;
+
+
 
 
         public ViewHolder(View itemView) {
@@ -99,42 +121,64 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             ivReply = (ImageView) itemView.findViewById(R.id.ivReply);
 
+            ivRetweet = (ImageView) itemView.findViewById(R.id.ivRetweet);
+            ivFavorite = (ImageView) itemView.findViewById(R.id.ivFavorite);
+
             // for reply activity
             ivReply.setOnClickListener(this);
 
             // for details activity
             itemView.setOnClickListener(this);
 
+            // for retweet
+            ivRetweet.setOnClickListener(this);
+            ivFavorite.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            // set up switch to manage the different click listeners
-            switch (v.getId()) {
-                // when reply is clicked
-                case R.id.ivReply:
-                    Intent intentReply = new Intent(context, ComposeActivity.class);
-                    intentReply.putExtra("Screen Name", tvName.getText().toString());
-                    context.startActivity(intentReply);
-                    break;
-                // when itemView click
-                default:
-                    // gets item position
-                    int position = getAdapterPosition();
-                    // make sure the position is valid, i.e. actually exists in the view
-                    if (position != RecyclerView.NO_POSITION) {
-                        // get the tweet at the position, this won't work if the class is static
-                        Tweet tweet = tweets.get(position);
+            // gets item position
+            int position = getAdapterPosition();
+
+            if (position != RecyclerView.NO_POSITION) {
+                // get the tweet at the position, this won't work if the class is static
+                Tweet tweet = tweets.get(position);
+
+                // set up switch to manage the different click listeners
+                switch (v.getId()) {
+                    // when reply is clicked
+                    case R.id.ivReply:
+                        Intent intentReply = new Intent(context, ComposeActivity.class);
+                        intentReply.putExtra("Screen Name", tvName.getText().toString());
+                        context.startActivity(intentReply);
+                        break;
+                    case R.id.ivRetweet:
+                        retweet(tweet.uid, ivRetweet);
+                        tweet.retweeted = true;
+                        break;
+                    case R.id.ivFavorite:
+                        if (tweet.favorited) {
+                            toUnfavorite(tweet.uid, ivFavorite);
+                            tweet.favorited = false;
+                        } else {
+                            toFavorite(tweet.uid, ivFavorite);
+                            tweet.favorited = true;
+                        }
+                        break;
+
+                    // when itemView click
+                    default:
                         Intent intentDetail = new Intent(context, TweetDetailsActivity.class);
 
                         intentDetail.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
                         context.startActivity(intentDetail);
-                    }
-                    break;
+                        break;
+                }
+
             }
+
         }
     }
-
 
     // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
     public String getRelativeTimeAgo(String rawJsonDate) {
@@ -164,6 +208,53 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public void addAll(List<Tweet> list) {
         tweets.addAll(list);
         notifyDataSetChanged();
+    }
+
+    public void retweet(long tweetId, final ImageView imageRetweet) {
+        // retweets
+        client.doRetweet(tweetId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                imageRetweet.setColorFilter(ContextCompat.getColor(context,R.color.medium_green));
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+            }
+
+        });
+    }
+
+    public void toFavorite(long tweetId, final ImageView tvFavoriteCount) {
+        client.createFavorite(tweetId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                tvFavoriteCount.setColorFilter(ContextCompat.getColor(context,R.color.medium_green));
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+            }
+        });
+    }
+
+    public void toUnfavorite(long tweetId, final ImageView tvFavoriteCount) {
+        client.destroyFavorite(tweetId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+                tvFavoriteCount.setColorFilter(ContextCompat.getColor(context,R.color.medium_gray));
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+            }
+        });
     }
 
 

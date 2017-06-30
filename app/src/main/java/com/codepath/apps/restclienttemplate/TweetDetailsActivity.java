@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -204,8 +205,10 @@ public class TweetDetailsActivity extends AppCompatActivity {
         retweet(tweet.uid);
     }
 
-//    public void onFavorite(View v) {
-//        toFavorite(tweet.uid);
-//    }
+    public void onReplying(View v) {
+        Intent intentReply = new Intent(this, ComposeActivity.class);
+        intentReply.putExtra("Screen Name", tvName.getText().toString());
+        this.startActivity(intentReply);
+    }
 
 }

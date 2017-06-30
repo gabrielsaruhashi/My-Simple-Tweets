@@ -79,7 +79,8 @@
         android:tint="@color/medium_gray_50"
         android:layout_marginTop="16dp"
         android:layout_marginLeft="64dp"
-        android:text="TextView" />
+        android:text="TextView"
+        android:onClick="onReplying"/>
 
     <ImageView
         android:id="@+id/ivRetweet"

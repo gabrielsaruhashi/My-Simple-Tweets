@@ -78,12 +78,10 @@
         android:id="@+id/ivFavorite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvRelativeTime"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_toRightOf="@id/ivRetweet"
+        android:tint="@color/medium_gray"
         app:srcCompat="@drawable/ic_favorite"
-        tools:ignore="VectorDrawableCompat"
-        android:tint="@color/medium_gray" />
+        tools:ignore="VectorDrawableCompat" />
 
 </RelativeLayout>
