@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -69,7 +70,11 @@ public class ComposeActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Fires right after the text has changed
+                if (MAX_CHAR - s.length() < 0) {
+                    tvCharCount.setTextColor(ContextCompat.getColor(ComposeActivity.this, R.color.colorAccent));
+                    btTweet.setBackgroundColor(ContextCompat.getColor(ComposeActivity.this, R.color.twitter_blue_30));
+
+                }
 
             }
 

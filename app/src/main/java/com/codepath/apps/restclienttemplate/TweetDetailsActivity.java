@@ -64,7 +64,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
         // populate views
         imageUrl = tweet.user.profileImageUrl;
         tvUserName.setText(tweet.user.screenName);
-        tvName.setText(tweet.user.name);
+        tvName.setText('@' + tweet.user.name);
         tvBody.setText(tweet.body);
         tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
         tvRetweetCount.setText(Integer.toString(tweet.retweetCount));
