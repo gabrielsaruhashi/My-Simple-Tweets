@@ -67,6 +67,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         // populate the views
         String imageUrl = tweet.user.profileImageUrl;
+        String entityUrl = tweet.mediaImageUrl;
         holder.tvUserName.setText(tweet.user.name);
         holder.tvBody.setText(tweet.body);
         holder.tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
@@ -86,6 +87,12 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 .load(imageUrl)
                 .bitmapTransform(new RoundedCornersTransformation(context, 15, 0))
                 .into(holder.ivProfileImage);
+
+        // load user profile image using glide
+        Glide.with(context)
+                .load(entityUrl)
+                .bitmapTransform(new RoundedCornersTransformation(context, 15, 0))
+                .into(holder.ivEntityMedia);
 
 
     }
@@ -107,8 +114,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public ImageView ivReply;
         public ImageView ivFavorite;
         public ImageView ivRetweet;
-
-
+        public ImageView ivEntityMedia;
 
 
         public ViewHolder(View itemView) {
@@ -123,6 +129,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
             ivRetweet = (ImageView) itemView.findViewById(R.id.ivRetweet);
             ivFavorite = (ImageView) itemView.findViewById(R.id.ivFavorite);
+            ivEntityMedia = (ImageView) itemView.findViewById(R.id.ivEntityMedia);
 
             // for reply activity
             ivReply.setOnClickListener(this);
