@@ -24,7 +24,11 @@ public class User {
         user.name=jsonObject.getString("name");
         user.uid = jsonObject.getLong("id");
         user.screenName = jsonObject.getString("screen_name");
-        user.profileImageUrl = jsonObject.getString("profile_image_url");
+        String biggerImage = "bigger";
+        // user.profileImageUrl = jsonObject.getString("profile_image_url")
+        String tempo = jsonObject.getString("profile_image_url");
+        user.profileImageUrl = tempo.replace("normal","bigger");
+
 
         return user;
     }

@@ -21,7 +21,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/tvBody"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textStyle="bold"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/tvBody"
@@ -29,10 +31,11 @@
         android:layout_height="wrap_content"
         android:autoLink="all"
         android:layout_below="@+id/tvUserName"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="8dp"
         android:layout_toEndOf="@+id/ivProfileImage"
-        android:text="TextView" />
-
+        android:textColor="@color/black"
+        android:text="TextView"
+        android:paddingBottom="24dp"/>
 
     <TextView
         android:id="@+id/tvRelativeTime"
@@ -46,16 +49,45 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/tvUserName"
-        android:text="TextView" />
+        android:text="TextView"
+        android:layout_marginLeft="4dp"/>
 
     <ImageView
-        android:id="@+id/ivReply"
+    android:id="@+id/ivReply"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    app:srcCompat="@drawable/ic_reply"
+    tools:ignore="VectorDrawableCompat"
+    android:tint="@color/medium_gray"
+        android:layout_alignStart="@id/etTweetBody"/>
+
+    <ImageView
+    android:id="@+id/ivRetweet"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/tvRelativeTime"
+    android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/ivReply"
+        android:paddingLeft="12dp"
+    app:srcCompat="@drawable/ic_vector_retweet"
+    tools:ignore="VectorDrawableCompat"
+    android:tint="@color/medium_gray"/>
+
+    <ImageView
+        android:id="@+id/ivFavorite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@id/etTweetBody"
         android:layout_below="@id/tvRelativeTime"
-        android:layout_alignRight="@id/tvRelativeTime"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/ivRetweet"
+        app:srcCompat="@drawable/ic_favorite"
+        tools:ignore="VectorDrawableCompat"
+        android:tint="@color/medium_gray" />
 
-        app:srcCompat="@drawable/ic_reply"
-        tools:ignore="VectorDrawableCompat" />
+
+
+
+
 </RelativeLayout>

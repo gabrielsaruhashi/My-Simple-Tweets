@@ -8,34 +8,42 @@
 
     <EditText
         android:id="@+id/etTweetBody"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="215dp"
         android:ems="10"
         android:hint="@string/my_hint"
-        android:inputType="textMultiLine" />
-
-    <Button
-        android:id="@+id/btTweet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="163dp"
-        android:onClick="onSubmit"
-        android:text="Tweet" />
+        android:inputType="textMultiLine"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="118dp" />
 
     <TextView
         android:id="@+id/tvCharCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="11dp"
         android:text="140"
-        tools:text="TextView" />
+        tools:text="TextView"
+        android:layout_marginBottom="24dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginEnd="12dp"/>
+    <Button
+        android:id="@+id/btTweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:onClick="onSubmit"
+        android:text="Tweet"
+        android:layout_toRightOf="@id/tvCharCount"
+        android:background="@color/twitter_blue"
+        android:layout_marginLeft="24dp"
+        android:textColor="@color/white"
+        android:layout_marginBottom="12dp"
+        />
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@color/medium_gray"
+        android:layout_above="@id/btTweet"
+        android:id="@+id/line"
+        android:layout_marginBottom="12dp" />
 </RelativeLayout>
