@@ -16,29 +16,33 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="118dp" />
 
+
+    <Button
+        android:id="@+id/btTweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:onClick="onSubmit"
+        android:text="Tweet"
+        android:background="@color/twitter_blue"
+        android:layout_marginRight="24dp"
+        android:textColor="@color/white"
+        android:layout_marginBottom="12dp"
+        />
+
     <TextView
         android:id="@+id/tvCharCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:text="140"
+        android:layout_toLeftOf="@id/btTweet"
         tools:text="TextView"
         android:layout_marginBottom="24dp"
-        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:layout_marginEnd="12dp"/>
-    <Button
-        android:id="@+id/btTweet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:onClick="onSubmit"
-        android:text="Tweet"
-        android:layout_toRightOf="@id/tvCharCount"
-        android:background="@color/twitter_blue"
-        android:layout_marginLeft="24dp"
-        android:textColor="@color/white"
-        android:layout_marginBottom="12dp"
-        />
+
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dip"

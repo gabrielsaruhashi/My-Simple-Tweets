@@ -53,26 +53,26 @@
         android:layout_marginLeft="4dp"/>
 
     <ImageView
-    android:id="@+id/ivReply"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    app:srcCompat="@drawable/ic_reply"
-    tools:ignore="VectorDrawableCompat"
-    android:tint="@color/medium_gray"
+        android:id="@+id/ivReply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:srcCompat="@drawable/ic_reply"
+        tools:ignore="VectorDrawableCompat"
+        android:tint="@color/medium_gray"
         android:layout_alignStart="@id/etTweetBody"/>
 
     <ImageView
-    android:id="@+id/ivRetweet"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_below="@id/tvRelativeTime"
-    android:layout_alignParentBottom="true"
+        android:id="@+id/ivRetweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvRelativeTime"
+        android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/ivReply"
         android:paddingLeft="12dp"
-    app:srcCompat="@drawable/ic_vector_retweet"
-    tools:ignore="VectorDrawableCompat"
-    android:tint="@color/medium_gray"/>
+        app:srcCompat="@drawable/ic_vector_retweet"
+        tools:ignore="VectorDrawableCompat"
+        android:tint="@color/medium_gray"/>
 
     <ImageView
         android:id="@+id/ivFavorite"
@@ -85,9 +85,5 @@
         app:srcCompat="@drawable/ic_favorite"
         tools:ignore="VectorDrawableCompat"
         android:tint="@color/medium_gray" />
-
-
-
-
 
 </RelativeLayout>
