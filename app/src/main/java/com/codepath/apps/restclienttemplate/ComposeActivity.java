@@ -21,6 +21,8 @@ import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
+import static com.codepath.apps.restclienttemplate.R.id.etTweetBody;
+
 
 public class ComposeActivity extends AppCompatActivity {
 
@@ -45,14 +47,16 @@ public class ComposeActivity extends AppCompatActivity {
 
         client = TwitterApplication.getRestClient();
         btTweet = (Button) findViewById(R.id.btTweet);
-        tentativeMessage =  (EditText) findViewById(R.id.etTweetBody);
+        tentativeMessage =  (EditText) findViewById(etTweetBody);
         tvCharCount = (TextView) findViewById(R.id.tvCharCount);
         screenName = (String) getIntent().getStringExtra("Screen Name");
-
+        btTweet.setBackgroundColor(ContextCompat.getColor(ComposeActivity.this, R.color.twitter_blue_30));
 
         if (screenName != null) {
             tentativeMessage.setText(screenName);
         }
+
+        tvCharCount.setText(String.valueOf(MAX_CHAR - tentativeMessage.getText().toString().length()));
 
         // add text listner
         tentativeMessage.addTextChangedListener(new TextWatcher() {
@@ -60,6 +64,9 @@ public class ComposeActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                tvCharCount.setText(String.valueOf(MAX_CHAR - s.length()));
+                if  (MAX_CHAR - s.length() < 140) {
+                    btTweet.setBackgroundColor(ContextCompat.getColor(ComposeActivity.this, R.color.twitter_blue));
+                }
             }
 
             @Override
@@ -82,7 +89,7 @@ public class ComposeActivity extends AppCompatActivity {
 
     }
 
-    private void postTweet(String message) {
+    public void postTweet(String message) {
         client.sendTweet(message, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

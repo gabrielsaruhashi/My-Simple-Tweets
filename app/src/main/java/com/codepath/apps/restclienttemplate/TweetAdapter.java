@@ -1,13 +1,18 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +20,8 @@ import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
@@ -26,6 +33,8 @@ import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
+import static android.content.DialogInterface.BUTTON_POSITIVE;
 
 /**
  * Created by gabesaruhashi on 6/26/17.
@@ -155,9 +164,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 switch (v.getId()) {
                     // when reply is clicked
                     case R.id.ivReply:
-                        Intent intentReply = new Intent(context, ComposeActivity.class);
-                        intentReply.putExtra("Screen Name", tvName.getText().toString());
-                        context.startActivity(intentReply);
+//                        Intent intentReply = new Intent(context, ComposeActivity.class);
+//                        intentReply.putExtra("Screen Name", tvName.getText().toString());
+//                        context.startActivity(intentReply);
+                        showAlertDialogForCompose(tweet);
                         break;
                     case R.id.ivRetweet:
                         retweet(tweet.uid, ivRetweet);
@@ -263,6 +273,151 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             }
         });
     }
+
+    // Display the alert that pops up the model overlay for reply
+    private void showAlertDialogForCompose(final Tweet tweet) {
+        // inflate message_item.xml view
+        View messageView = LayoutInflater.from(context).
+                inflate(R.layout.fragment_compose, null);
+        // Create alert dialog builder
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        // set message_item.xml to AlertDialog builder
+        alertDialogBuilder.setView(messageView);
+
+        // Create alert dialog
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        final int MAX_CHAR = 140;
+
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                // set button colors
+                alertDialog.getButton(BUTTON_POSITIVE).setBackgroundColor(ContextCompat.getColor(context, R.color.twitter_blue));
+                alertDialog.getButton(BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.white));
+
+                // get views
+                EditText etTweetBody = (EditText) alertDialog.findViewById(R.id.etTweetBody);
+                TextView tvSupportReply = (TextView) alertDialog.findViewById(R.id.tvSupportReply);
+                TextView tvName = (TextView) alertDialog.findViewById(R.id.tvName);
+                TextView tvScreenName = (TextView) alertDialog.findViewById(R.id.tvScreenName);
+                ImageView ivProfileImage = (ImageView) alertDialog.findViewById(R.id.ivProfileImage);
+                final TextView tvCharCount = (TextView) alertDialog.findViewById(R.id.tvCharCount);
+
+                etTweetBody.setText('@' + tweet.user.screenName);
+                tvSupportReply.setText("In reply to " + tweet.user.screenName);
+                tvCharCount.setText(String.valueOf(MAX_CHAR - etTweetBody.getText().toString().length()));
+                tvName.setText(tweet.user.name);
+                tvScreenName.setText(tweet.user.screenName);
+
+                // load user profile image using glide
+                Glide.with(context)
+                        .load(tweet.user.profileImageUrl)
+                        .bitmapTransform(new RoundedCornersTransformation(context, 15, 0))
+                        .into(ivProfileImage);
+
+
+                // add text listner
+                etTweetBody.addTextChangedListener(new TextWatcher() {
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        tvCharCount.setText(String.valueOf(MAX_CHAR - s.length()));
+
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count,
+                                                  int after) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (MAX_CHAR - s.length() < 0) {
+                            tvCharCount.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+                            alertDialog.getButton(BUTTON_POSITIVE).setBackgroundColor(ContextCompat.getColor(context, R.color.twitter_blue_50));
+                        }
+
+                        if (MAX_CHAR - s.length() > 0) {
+                            tvCharCount.setTextColor(ContextCompat.getColor(context, R.color.medium_gray));
+                            alertDialog.getButton(BUTTON_POSITIVE).setBackgroundColor(ContextCompat.getColor(context, R.color.twitter_blue));
+                        }
+                    }
+
+                });
+
+            }
+        });
+
+        // Configure dialog button (OK)
+        alertDialog.setButton(BUTTON_POSITIVE, "Tweet",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        // Extract content from alert dialog
+                        String stringBody = ((EditText) alertDialog.findViewById(R.id.etTweetBody)).getText().toString();
+
+                        // Posts Tweet
+                        postReplyTweet(stringBody);
+                    }
+                });
+
+        // Configure dialog button (Cancel)
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) { dialog.cancel(); }
+                });
+
+        // Display the dialog
+        alertDialog.show();
+    }
+
+
+    public void postReplyTweet(String message) {
+        client.sendTweet(message, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    Tweet newTweet = Tweet.fromJSON(response);
+                    tweets.add(newTweet);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                super.onSuccess(statusCode, headers, responseString);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
+    }
+
 
 
 

@@ -288,21 +288,8 @@ public class TimelineActivity extends AppCompatActivity {
         });
     }
 
-    public String compareIdStrings(String a, String b) {
-        if (a.length() == b.length()) {
-            for (int i = 0; i < a.length(); i++) {
-                if (Character.getNumericValue(a.charAt(i)) > Character.getNumericValue(b.charAt(i))) {
-                    return a;
-                } else {
-                    return b; }
-            }
 
-        } else if (a.length() > b.length()) {
-            return a;
-        } else return b;
 
-        return null;
-    }
 }
 
 
