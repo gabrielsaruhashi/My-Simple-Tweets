@@ -90,6 +90,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
                     .into(ivEntityMedia);
         }
 
+        // check favorited to change color
         if (favorited) {
             ivFavorite.setColorFilter(ContextCompat.getColor(TweetDetailsActivity.this,R.color.medium_green));
         } else {
@@ -119,8 +120,6 @@ public class TweetDetailsActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 
     // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");

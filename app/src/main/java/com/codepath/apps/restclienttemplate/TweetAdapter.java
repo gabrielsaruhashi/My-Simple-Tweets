@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -149,6 +150,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             // for retweet
             ivRetweet.setOnClickListener(this);
             ivFavorite.setOnClickListener(this);
+
+            // for follower list
+            tvUserName.setOnClickListener(this);
         }
 
         @Override
@@ -181,6 +185,12 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                             toFavorite(tweet.uid, ivFavorite);
                             tweet.favorited = true;
                         }
+                        break;
+
+                    case R.id.tvUserName:
+                        Intent intentFollower = new Intent(context, FollowerListActivity.class);
+                        intentFollower.putExtra(User.class.getSimpleName(), tweet.user.uid);
+                        context.startActivity(intentFollower);
                         break;
 
                     // when itemView click
