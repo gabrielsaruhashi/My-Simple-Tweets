@@ -2,7 +2,7 @@
 
 **Name of your app** is an android app that allows a user to view his Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: **X** hours spent in total
+Time spent: 35 hours spent in total
 
 ## User Stories
 
@@ -33,11 +33,11 @@ The following **optional** features are implemented:
 The following **bonus** features are implemented:
 
 * [X] User can view more tweets as they scroll with infinite pagination
-* [X] <i>Only implemented for ivReply to offer differente UI experience for the two compose methods</i> Compose tweet functionality is build using modal overlay
+* [X] _Only implemented for ivReply to offer differente UI experience for the two compose methods_ Compose tweet functionality is build using modal overlay
 * [X] Use Parcelable instead of Serializable using the popular [Parceler library](http://guides.codepath.com/android/Using-Parceler).
 * [X] Replace all icon drawables and other static image assets with [vector drawables](http://guides.codepath.com/android/Drawables#vector-drawables) where appropriate.
 * [X] User can **click a link within a tweet body** on tweet details view. The click will launch the web browser with relevant page opened.
-* [ ] User can view following / followers list through any profile they view.
+* [X] _Only gets followers list_ User can view following / followers list through any profile they view.
 * [X] User can see embedded image media within the tweet detail view
 * [X] Use the popular ButterKnife annotation library to reduce view boilerplate.
 * [ ] On the Twitter timeline, leverage the [CoordinatorLayout](http://guides.codepath.com/android/Handling-Scrolls-with-CoordinatorLayout#responding-to-scroll-events) to apply scrolling behavior that [hides / shows the toolbar](http://guides.codepath.com/android/Using-the-App-ToolBar#reacting-to-scroll).
@@ -52,7 +52,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/gabrielsaruhashi/My-Simple-Tweets/blob/master/twitter-vid.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
