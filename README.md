@@ -52,7 +52,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://github.com/gabrielsaruhashi/My-Simple-Tweets/blob/master/twitter-vid.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/gabrielsaruhashi/My-Simple-Tweets/blob/master/twitter-vid.gif' title='Video Walkthrough' width='50%' alt='Video Walkthrough' height="50%" />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
