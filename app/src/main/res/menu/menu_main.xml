@@ -3,11 +3,15 @@
      such as `res/menu/menu_movies.xml`  -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
     <item
-        android:id="@+id/icLogo"
-        android:icon="@drawable/ic_twitter_icon"
+        android:id="@+id/miProfile"
+        android:icon="@drawable/ic_person_white_24dp"
         app:showAsAction="ifRoom"
-        android:title="Logo">
+        android:title="Profile"
+        android:onClick="OnProfileView"
+        >
     </item>
 
     <item

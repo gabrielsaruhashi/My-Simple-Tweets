@@ -17,6 +17,9 @@ public class User {
     public String screenName;
     public String profileImageUrl;
 
+    public String tagline;
+    public int followersCount;
+    public int followingCount;
     // deserialize the JSON
     public static User fromJSON(JSONObject jsonObject) throws JSONException {
         User user = new User();
@@ -29,6 +32,9 @@ public class User {
         String tempo = jsonObject.getString("profile_image_url");
         user.profileImageUrl = tempo.replace("normal","bigger");
 
+        user.tagline = jsonObject.getString("description");
+        user.followersCount = jsonObject.getInt("followers_count");
+        user.followingCount = jsonObject.getInt("friends_count");
 
         return user;
     }

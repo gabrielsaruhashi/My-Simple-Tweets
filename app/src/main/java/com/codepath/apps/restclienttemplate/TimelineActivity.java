@@ -2,39 +2,19 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.fragments.TweetsPagerAdapter;
 import com.codepath.apps.restclienttemplate.models.Tweet;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.parceler.Parcels;
-
-import java.util.ArrayList;
-
-import cz.msebera.android.httpclient.Header;
-
-import static com.codepath.apps.restclienttemplate.R.id.rvTweet;
 
 public class TimelineActivity extends AppCompatActivity {
 
     // create reference for twitter client
-    private TwitterClient client;
-    // list of tweets
-    ArrayList<Tweet> tweets;
-    // recycler view
-    RecyclerView rvTweets;
-    // the adapter wired to the new view
-    TweetAdapter adapter;
     // REQUEST_CODE can be any value we like, used to determine the result type later
     private final int REQUEST_CODE = 20;
     // reference for possible newTweet;
@@ -49,10 +29,13 @@ public class TimelineActivity extends AppCompatActivity {
     private long lowMaxId;
 
 
+    // timeliene activity's main function is loading the fragments
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline_activity);
+
+        /* REFRESHING THING
         // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -69,25 +52,12 @@ public class TimelineActivity extends AppCompatActivity {
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+                android.R.color.holo_red_light); */
 
-        // initialize the client
-        client = TwitterApplication.getRestClient();
 
-        // find the Recycler view
-        rvTweets = (RecyclerView) findViewById(rvTweet);
 
-        // initialize the list of tweets
-        tweets = new ArrayList<>();
-        // construct the adater from the data source
-        adapter = new TweetAdapter(tweets);
-        // recycler setup (connect a layout manager and an adapter)
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        rvTweets.setLayoutManager(linearLayoutManager);
-        rvTweets.setAdapter(adapter);
-
-        /* Infinite Pagination */
-        // Retain an instance so that you can call 'resetState() for fresh searches
+        /*
+        // Infinite Pagination. Retain an instance so that you can call 'resetState() for fresh searches
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -95,30 +65,7 @@ public class TimelineActivity extends AppCompatActivity {
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-
-                        // iterate through the results
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
-                                // for each entry, deserialize the JSON object
-                                JSONObject json = response.getJSONObject(i);
-
-                                // convert each object to a Tweet model
-                                Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
-
-                                if (i == response.length() - 1) {
-                                    lowMaxId = tweet.uid;
-                                }
-
-                                // add the tweet model to data source
-                                tweets.add(tweet);
-
-                                // notify adapter that we've added an item
-                                adapter.notifyItemInserted(tweets.size() - 1);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                        fragmentTweetsLists.addItems(response);
                     }
 
                     @Override
@@ -130,17 +77,22 @@ public class TimelineActivity extends AppCompatActivity {
             }
         };
 
-
         // adds the scroll listener to RecyclerView
         rvTweets.addOnScrollListener(scrollListener);
 
-        /**************************/
         // add line divider decorator
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
-        rvTweets.addItemDecoration(itemDecoration);
+        rvTweets.addItemDecoration(itemDecoration); */
 
-        populateTimeline();
+        // get the view pager
+        ViewPager vpPager = (ViewPager) findViewById(R.id.viewpager);
+
+        // set the adapter
+        vpPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager(), this));
+        // setup the TabLayout to use the view pager
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(vpPager);
 
 
     }
@@ -171,6 +123,7 @@ public class TimelineActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CODE);
     }
 
+    /*
     // once the sub-activity finishes, the onActivityResult() method in the calling activity is be invoked:
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -187,65 +140,10 @@ public class TimelineActivity extends AppCompatActivity {
             Toast.makeText(this, "Tweeted!", Toast.LENGTH_LONG).show();
         }
     }
+    */
 
-    private void populateTimeline() {
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("TwitterClient", response.toString());
-
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-
-                // iterate through the results
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        // for each entry, deserialize the JSON object
-                        JSONObject json = response.getJSONObject(i);
-
-                        // convert each object to a Tweet model
-                        Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
-
-                        if (i == response.length() - 1) {
-                            lowMaxId = tweet.uid;
-                        }
-                        // add the tweet model to data source
-                        tweets.add(tweet);
-
-                        // notify adapter that we've added an item
-                        adapter.notifyItemInserted(tweets.size() - 1);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d("TwitterClient",responseString);
-                throwable.printStackTrace();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("TwitterClient", errorResponse.toString());
-                throwable.printStackTrace();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                Log.d("TwitterClient", errorResponse.toString());
-                throwable.printStackTrace();
-            };
-
-        });
-    }
-
-    //
+    /*
     public void fetchTimelineAsync(int page) {
         // Send the network request to fetch the updated data
         // `client` here is an instance of Android Async HTTP
@@ -287,9 +185,14 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
     }
+    */
 
+    public void OnProfileView(MenuItem item) {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        //intent.putExtra(User.class.getSimpleName(), )
 
-
+        startActivity(intent);
+    }
 }
 
 

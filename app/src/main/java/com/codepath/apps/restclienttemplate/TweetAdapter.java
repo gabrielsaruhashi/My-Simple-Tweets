@@ -153,6 +153,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
             // for follower list
             tvUserName.setOnClickListener(this);
+
+            // for another user's profile
+            ivProfileImage.setOnClickListener(this);
         }
 
         @Override
@@ -191,6 +194,14 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         Intent intentFollower = new Intent(context, FollowerListActivity.class);
                         intentFollower.putExtra(User.class.getSimpleName(), tweet.user.uid);
                         context.startActivity(intentFollower);
+                        break;
+
+
+                    // case when another user profile is clicked
+                    case R.id.ivProfileImage:
+                        Intent intentOtherUser = new Intent(context, ProfileActivity.class);
+                        intentOtherUser.putExtra("screen_name", tweet.user.screenName);
+                        context.startActivity(intentOtherUser);
                         break;
 
                     // when itemView click
