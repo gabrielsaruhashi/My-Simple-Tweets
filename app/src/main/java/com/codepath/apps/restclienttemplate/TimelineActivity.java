@@ -6,11 +6,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.codepath.apps.restclienttemplate.fragments.HomeTimelineFragment;
+import com.codepath.apps.restclienttemplate.fragments.TweetsListFragment;
 import com.codepath.apps.restclienttemplate.fragments.TweetsPagerAdapter;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+
+import org.parceler.Parcels;
 
 public class TimelineActivity extends AppCompatActivity {
 
@@ -28,6 +33,12 @@ public class TimelineActivity extends AppCompatActivity {
     // store the lowest max id
     private long lowMaxId;
 
+    // store the page id
+    private String pageName;
+
+    private ViewPager vpPager;
+    private TweetsPagerAdapter tweetsPageAdapter;
+    private HomeTimelineFragment newFrag;
 
     // timeliene activity's main function is loading the fragments
     @Override
@@ -35,76 +46,33 @@ public class TimelineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline_activity);
 
-        /* REFRESHING THING
-        // Lookup the swipe container view
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        // get the view pager
+        vpPager = (ViewPager) findViewById(R.id.viewpager);
+        tweetsPageAdapter = new TweetsPagerAdapter(getSupportFragmentManager(), this);
+        // set the adapter
+        vpPager.setAdapter(tweetsPageAdapter);
+
+        vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                fetchTimelineAsync(0);
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                TweetsListFragment f = (TweetsListFragment) tweetsPageAdapter.getItem(position);
+                f.setPage(position);
+                Log.i("DEBUG", Integer.toString(position));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
             }
         });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light); */
 
-
-
-        /*
-        // Infinite Pagination. Retain an instance so that you can call 'resetState() for fresh searches
-        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                client.getHomeTimeline(lowMaxId, new JsonHttpResponseHandler() {
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                        fragmentTweetsLists.addItems(response);
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                        Log.d("OnLoadMore failure",responseString);
-                        throwable.printStackTrace();
-                    }
-                });
-            }
-        };
-
-        // adds the scroll listener to RecyclerView
-        rvTweets.addOnScrollListener(scrollListener);
-
-        // add line divider decorator
-        RecyclerView.ItemDecoration itemDecoration = new
-                DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
-        rvTweets.addItemDecoration(itemDecoration); */
-
-        // get the view pager
-        ViewPager vpPager = (ViewPager) findViewById(R.id.viewpager);
-
-        // set the adapter
-        vpPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager(), this));
         // setup the TabLayout to use the view pager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(vpPager);
 
-
-    }
-
-    // Append the next page of data into the adapter
-    // This method probably sends out a network request and appends new data items to your adapter.
-    public void loadNextDataFromApi(int offset) {
-        // Send an API request to retrieve appropriate paginated data
-        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
-        //  --> Deserialize and construct new model objects from the API response
-        //  --> Append the new data objects to the existing set of items inside the array of items
-        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
     }
 
     // adds the icons in the menu
@@ -123,75 +91,29 @@ public class TimelineActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CODE);
     }
 
-    /*
+
     // once the sub-activity finishes, the onActivityResult() method in the calling activity is be invoked:
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         // REQUEST_CODE is defined above
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            // Extract name value from result extras
+
             newTweet = (Tweet) Parcels.unwrap(intent.getParcelableExtra(Tweet.class.getSimpleName()));
-
-            tweets.add(0, newTweet);
-            adapter.notifyItemInserted(0);
-            rvTweets.scrollToPosition(0);
-
-            // Toast the name to display temporarily on screen
-            Toast.makeText(this, "Tweeted!", Toast.LENGTH_LONG).show();
+            newFrag = (HomeTimelineFragment) tweetsPageAdapter.getItem(0);
+            vpPager.setCurrentItem(0);
+            newFrag.addTweet(newTweet);
         }
     }
-    */
 
-
-    /*
-    public void fetchTimelineAsync(int page) {
-        // Send the network request to fetch the updated data
-        // `client` here is an instance of Android Async HTTP
-        // getHomeTimeline is an example endpoint.
-
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                // Remember to CLEAR OUT old items before appending in the new ones
-                adapter.clear();
-                // iterate through the results
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        // for each entry, deserialize the JSON object
-                        JSONObject json = response.getJSONObject(i);
-
-                        // convert each object to a Tweet model
-                        Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
-
-                        // add the tweet model to data source
-                        tweets.add(tweet);
-
-                        // notify adapter that we've added an item
-                        adapter.notifyItemInserted(tweets.size() - 1);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                // Now we call setRefreshing(false) to signal refresh has finished
-                swipeContainer.setRefreshing(false);
-                Log.i("Refresh", "ay");
-            }
-
-
-
-            public void onFailure(Throwable e) {
-                Log.d("DEBUG", "Fetch timeline error: " + e.toString());
-            }
-        });
-    }
-    */
 
     public void OnProfileView(MenuItem item) {
         Intent intent = new Intent(this, ProfileActivity.class);
         //intent.putExtra(User.class.getSimpleName(), )
-
         startActivity(intent);
+    }
+
+    public void addTweet(Tweet tweet) {
+
     }
 }
 

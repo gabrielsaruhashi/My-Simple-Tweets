@@ -14,6 +14,9 @@ public class TweetsPagerAdapter extends FragmentPagerAdapter {
     private String tabsTitles[] = new String[] {"Home", "Mentions"};
     private Context context;
 
+    private HomeTimelineFragment timelinefragment;
+    private MentionsTimelineFragment mentionsfragment;
+
     public TweetsPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.context = context;
@@ -31,21 +34,36 @@ public class TweetsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if  (position == 0) {
-            return new HomeTimelineFragment();
+            timelinefragment = getTimelineInstance();
+            return timelinefragment;
         } else if (position == 1) {
-            return new MentionsTimelineFragment();
+            mentionsfragment = getMentionsInstance();
+            return mentionsfragment;
         } else {
             return null;
         }
     }
 
-
     // return title
-
     @Override
     public CharSequence getPageTitle(int position) {
 
         // generate title based on item postion
         return tabsTitles[position];
     }
+
+    private HomeTimelineFragment getTimelineInstance() {
+        if (timelinefragment == null) {
+            timelinefragment = new HomeTimelineFragment();
+        }
+        return timelinefragment;
+    }
+
+    private MentionsTimelineFragment getMentionsInstance() {
+        if (mentionsfragment == null) {
+            mentionsfragment = new MentionsTimelineFragment();
+        }
+        return mentionsfragment;
+    }
+
 }

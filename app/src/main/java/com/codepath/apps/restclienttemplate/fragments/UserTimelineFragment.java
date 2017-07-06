@@ -35,6 +35,7 @@ public class UserTimelineFragment extends TweetsListFragment {
         // initialize the client
         client = TwitterApplication.getRestClient();
         populateTimeline();
+
     }
 
     private void populateTimeline() {
@@ -73,5 +74,4 @@ public class UserTimelineFragment extends TweetsListFragment {
 
         });
     }
-
 }

@@ -21,12 +21,18 @@ public class HomeTimelineFragment extends TweetsListFragment {
     // create reference for twitter client
     private TwitterClient client;
 
+    // store the lowest max id
+    private long lowMaxId;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // initialize the client
         client = TwitterApplication.getRestClient();
         populateTimeline();
+
+
     }
 
     private void populateTimeline() {
