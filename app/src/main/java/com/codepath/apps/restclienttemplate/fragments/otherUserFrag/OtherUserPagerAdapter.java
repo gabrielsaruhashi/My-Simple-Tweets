@@ -16,17 +16,19 @@ public class OtherUserPagerAdapter extends FragmentPagerAdapter {
     private String tabsTitles[] = new String[] {"Tweets", "Followers", "Follwing"};
     private Context context;
     private String screeName;
+    private long uid;
 
-    public OtherUserPagerAdapter(FragmentManager fm, String name, Context context) {
+    public OtherUserPagerAdapter(FragmentManager fm, String name, long uid, Context context) {
         super(fm);
         this.context = context;
         this.screeName = name;
+        this.uid = uid;
     }
 
     // return the total # of fragment
     @Override
     public int getCount() {
-        return 1;
+        return 3;
     }
 
 
@@ -37,7 +39,9 @@ public class OtherUserPagerAdapter extends FragmentPagerAdapter {
             return UserTimelineFragment.newInstance(screeName);
 
         } else if (position == 1) {
-            return new FollowersListFragment();
+            return FollowersListFragment.newInstance(uid);
+        } else if (position == 2) {
+            return FollowingListFragment.newInstance(uid);
         }
         else {
             return null;

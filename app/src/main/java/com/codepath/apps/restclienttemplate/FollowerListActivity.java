@@ -33,6 +33,7 @@ public class FollowerListActivity extends AppCompatActivity {
     // original user id
     long userId;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -31,18 +31,8 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         String screenName = getIntent().getStringExtra("screen_name");
-        // create the user fragment
-        // UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(screenName);
+        long uid = getIntent().getLongExtra("uid", 0);
 
-        /*
-        // display the user timeline fragment inside the container (dynamically)
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-        //make change
-        ft.replace(R.id.flContainer, userTimelineFragment);
-
-        // commit
-        ft.commit(); */
 
         client = TwitterApplication.getRestClient();
 
@@ -83,7 +73,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // get the view pager
         vpPager = (ViewPager) findViewById(R.id.viewpager);
-        otherUserPagerAdapter = new OtherUserPagerAdapter(getSupportFragmentManager(), screenName, this);
+        otherUserPagerAdapter = new OtherUserPagerAdapter(getSupportFragmentManager(), screenName, uid, this);
         // set the adapter
         vpPager.setAdapter(otherUserPagerAdapter);
 

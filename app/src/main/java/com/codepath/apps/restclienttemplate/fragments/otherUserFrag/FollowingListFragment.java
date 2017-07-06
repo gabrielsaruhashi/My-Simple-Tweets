@@ -28,10 +28,10 @@ import cz.msebera.android.httpclient.Header;
 import static com.codepath.apps.restclienttemplate.R.id.rvFollower;
 
 /**
- * Created by gabesaruhashi on 7/5/17.
+ * Created by gabesaruhashi on 7/6/17.
  */
 
-public class FollowersListFragment extends TweetsListFragment {
+public class FollowingListFragment extends TweetsListFragment {
     // create reference for twitter client
     private TwitterClient client;
     // the list of currently playing movies
@@ -41,12 +41,12 @@ public class FollowersListFragment extends TweetsListFragment {
     RecyclerView rvFollowers;
 
 
-    public static FollowersListFragment newInstance(long uid) {
-        FollowersListFragment followersListFragment = new FollowersListFragment();
+    public static FollowingListFragment newInstance(long uid) {
+        FollowingListFragment followingListFragment = new FollowingListFragment();
         Bundle args = new Bundle();
         args.putLong("uid", uid);
-        followersListFragment.setArguments(args);
-        return followersListFragment;
+        followingListFragment.setArguments(args);
+        return followingListFragment;
     }
 
     /*
@@ -87,7 +87,7 @@ public class FollowersListFragment extends TweetsListFragment {
     private void populateFollowerList() {
         // comes from the activity
         long uid = getArguments().getLong("uid");
-        client.getFollowerList(uid, new JsonHttpResponseHandler() {
+        client.getFriendsList(uid, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
@@ -136,7 +136,5 @@ public class FollowersListFragment extends TweetsListFragment {
         });
     }
 
-
-
-
 }
+

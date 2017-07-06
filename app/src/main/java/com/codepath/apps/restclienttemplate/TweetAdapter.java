@@ -201,6 +201,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     case R.id.ivProfileImage:
                         Intent intentOtherUser = new Intent(context, ProfileActivity.class);
                         intentOtherUser.putExtra("screen_name", tweet.user.screenName);
+                        intentOtherUser.putExtra("uid", tweet.user.uid);
                         context.startActivity(intentOtherUser);
                         break;
 
