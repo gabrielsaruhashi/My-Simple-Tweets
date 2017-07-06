@@ -32,7 +32,6 @@ public class HomeTimelineFragment extends TweetsListFragment {
         client = TwitterApplication.getRestClient();
         populateTimeline();
 
-
     }
 
     private void populateTimeline() {

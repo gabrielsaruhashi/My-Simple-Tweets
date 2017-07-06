@@ -1,13 +1,14 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.codepath.apps.restclienttemplate.fragments.UserTimelineFragment;
+import com.codepath.apps.restclienttemplate.fragments.otherUserFrag.OtherUserPagerAdapter;
 import com.codepath.apps.restclienttemplate.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -19,6 +20,11 @@ import cz.msebera.android.httpclient.Header;
 public class ProfileActivity extends AppCompatActivity {
 
     TwitterClient client;
+
+    private ViewPager vpPager;
+    private OtherUserPagerAdapter otherUserPagerAdapter;
+    private User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +32,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         String screenName = getIntent().getStringExtra("screen_name");
         // create the user fragment
-        UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(screenName);
+        // UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(screenName);
+
+        /*
         // display the user timeline fragment inside the container (dynamically)
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
@@ -34,7 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
         ft.replace(R.id.flContainer, userTimelineFragment);
 
         // commit
-        ft.commit();
+        ft.commit(); */
 
         client = TwitterApplication.getRestClient();
 
@@ -45,13 +53,9 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
                         // deserialize the user object
-                        User user = User.fromJSON(response);
+                        user = User.fromJSON(response);
 
-                        // set the tile of the Action bar based on the user information
-                        getSupportActionBar().setTitle(user.screenName);
-
-                        // populate the user headlien
-                        populateUserheadline(user);
+                        setupView(user);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -64,19 +68,37 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
                         // deserialize the user object
-                        User user = User.fromJSON(response);
+                        user = User.fromJSON(response);
 
-                        // set the tile of the Action bar based on the user information
-                        getSupportActionBar().setTitle(user.screenName);
+                        setupView(user);
 
-                        // populate the user headlien
-                        populateUserheadline(user);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             });
         }
+
+        // instantiate pageviewer and tab layou
+
+        // get the view pager
+        vpPager = (ViewPager) findViewById(R.id.viewpager);
+        otherUserPagerAdapter = new OtherUserPagerAdapter(getSupportFragmentManager(), screenName, this);
+        // set the adapter
+        vpPager.setAdapter(otherUserPagerAdapter);
+
+        // setup the TabLayout to use the view pager
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(vpPager);
+
+    }
+
+    public void setupView(User user) {
+        // set the tile of the Action bar based on the user information
+        getSupportActionBar().setTitle(user.screenName);
+
+        // populate the user headline
+        populateUserheadline(user);
     }
 
     public void populateUserheadline(User user) {
