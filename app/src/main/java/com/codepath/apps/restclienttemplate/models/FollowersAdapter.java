@@ -86,6 +86,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
         public void onClick(View v) {
             Intent intentDetail = new Intent(context, ProfileActivity.class);
             intentDetail.putExtra("screen_name", follower.screenName);
+            intentDetail.putExtra("uid", follower.uid);
             context.startActivity(intentDetail);
         }
     }

@@ -51,6 +51,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     // create reference for twitter client
     private TwitterClient client;
 
+    private Tweet newReplyTweet;
+
 
     // creates and inflates a new view; for each row, inflate the layout and cache references
     // into ViewHolder. Only invoked when you create new row
@@ -396,6 +398,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         // Display the dialog
         alertDialog.show();
+
+        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+
+            }
+        });
     }
 
 
@@ -405,7 +414,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Tweet newTweet = Tweet.fromJSON(response);
-                    tweets.add(newTweet);
+                    tweets.add(0, newTweet);
+                    notifyItemInserted(0);
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
