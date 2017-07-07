@@ -94,8 +94,6 @@ public class FollowersListFragment extends TweetsListFragment {
                     JSONArray usersArray = response.getJSONArray("users");
                     for (int i = 0; i < usersArray.length(); i++) {
 
-                        // for each entry, deserialize the JSON object
-                        JSONObject json = usersArray.getJSONObject(i);
 
                         // convert each object to a Tweet model
                         User follower = User.fromJSON(usersArray.getJSONObject(i));

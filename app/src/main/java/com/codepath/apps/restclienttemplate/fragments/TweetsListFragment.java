@@ -28,8 +28,6 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-import static com.codepath.apps.restclienttemplate.R.id.rvTweet;
-
 /**
  * Created by gabesaruhashi on 7/3/17.
  */
@@ -62,7 +60,7 @@ public class TweetsListFragment extends Fragment {
         // inflate the layout
         View v = inflater.inflate(R.layout.fragments_tweets_list, container, false);
         // find the Recycler view
-        rvTweets = (RecyclerView) v.findViewById(rvTweet);
+        rvTweets = (RecyclerView) v.findViewById(R.id.rvTweet);
 
         // initialize the client
         client = TwitterApplication.getRestClient();

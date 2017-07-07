@@ -38,6 +38,7 @@
         <activity android:name=".TweetDetailsActivity" />
         <activity android:name=".FollowerListActivity" />
         <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".SearchActivity"></activity>
     </application>
 
 </manifest>
