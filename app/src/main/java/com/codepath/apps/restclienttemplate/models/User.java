@@ -20,6 +20,8 @@ public class User {
     public String tagline;
     public int followersCount;
     public int followingCount;
+
+    public String profileBackground;
     // deserialize the JSON
     public static User fromJSON(JSONObject jsonObject) throws JSONException {
         User user = new User();
@@ -35,6 +37,8 @@ public class User {
         user.tagline = jsonObject.getString("description");
         user.followersCount = jsonObject.getInt("followers_count");
         user.followingCount = jsonObject.getInt("friends_count");
+
+        user.profileBackground = jsonObject.getString("profile_background_image_url");
 
         return user;
     }

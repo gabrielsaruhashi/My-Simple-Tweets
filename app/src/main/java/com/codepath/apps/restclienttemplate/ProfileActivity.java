@@ -85,7 +85,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void setupView(User user) {
         // set the tile of the Action bar based on the user information
-        getSupportActionBar().setTitle(user.screenName);
+        //getSupportActionBar().setTitle(user.screenName);
+        setTitle(user.screenName);
 
         // populate the user headline
         populateUserheadline(user);
@@ -96,8 +97,8 @@ public class ProfileActivity extends AppCompatActivity {
         TextView tvTagline = (TextView) findViewById(R.id.tvTagline);
         TextView tvFollowers = (TextView) findViewById(R.id.tvFollowers);
         TextView tvFollowing = (TextView) findViewById(R.id.tvFollowing);
-
         ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
+        ImageView ivProfileBackground = (ImageView) findViewById(R.id.ivProfileBackground);
         tvName.setText(user.name);
 
         tvTagline.setText(user.tagline);
@@ -107,6 +108,10 @@ public class ProfileActivity extends AppCompatActivity {
         Glide.with(this)
                 .load(user.profileImageUrl)
                 .into(ivProfileImage);
+
+        Glide.with(this)
+                .load(user.profileBackground)
+                .into(ivProfileBackground);
 
     }
 }

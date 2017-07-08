@@ -71,9 +71,10 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 
 	public void doRetweet(long id, AsyncHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("statuses/retweet/" + id + ".json");
+		String apiUrl = getApiUrl("statuses/retweet.json");
 		// Can specify query string params directly or through RequestParams.
-
+		RequestParams params = new RequestParams();
+		params.put("id", id);
 		client.post(apiUrl, handler);
 	}
 
@@ -97,7 +98,7 @@ public class TwitterClient extends OAuthBaseClient {
 		String apiUrl = getApiUrl("followers/list.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
-		params.put("count", 100);
+		params.put("count", 5);
 		params.put("user_id", id);
 		client.get(apiUrl, params, handler);
 	}
@@ -106,17 +107,17 @@ public class TwitterClient extends OAuthBaseClient {
 		String apiUrl = getApiUrl("friends/list.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
-		params.put("count", 100);
+		params.put("count", 5);
 		params.put("user_id", id);
 		client.get(apiUrl, params, handler);
 	}
 
 	// get timeline
-	public void geMentionsTimeline(AsyncHttpResponseHandler handler) {
+	public void getMentionsTimeline(AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/mentions_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
-		params.put("count", 25);
+		params.put("count", 10);
 		params.put("since_id", 1);
 		client.get(apiUrl, params, handler);
 	}
@@ -127,7 +128,7 @@ public class TwitterClient extends OAuthBaseClient {
 		String apiUrl = getApiUrl("statuses/user_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
-		params.put("count", 25);
+		params.put("count", 10);
 		params.put("screen_name", screenName);
 		client.get(apiUrl, params, handler);
 	}

@@ -53,12 +53,23 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
         holder.tvName.setText(follower.name);
         holder.tvUserName.setText(follower.screenName);
         String imageUrl = follower.profileImageUrl;
+        final String name = follower.screenName;
 
         // load image using glide
         Glide.with(context)
                 .load(imageUrl)
                 .bitmapTransform(new RoundedCornersTransformation(context, 25, 0))
                 .into(holder.ivProfileImage);
+
+        holder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentDetail = new Intent(context, ProfileActivity.class);
+                intentDetail.putExtra("screen_name", name);
+                intentDetail.putExtra("uid", follower.uid);
+                context.startActivity(intentDetail);
+            }
+        });
     }
 
     @Override
@@ -67,7 +78,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
     }
 
     // creates ViewHolder class
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         // track view objects
         public ImageView ivProfileImage;
@@ -79,16 +90,9 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.View
             ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
             tvUserName = (TextView) itemView.findViewById(R.id.tvUserName);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
-            itemView.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View v) {
-            Intent intentDetail = new Intent(context, ProfileActivity.class);
-            intentDetail.putExtra("screen_name", follower.screenName);
-            intentDetail.putExtra("uid", follower.uid);
-            context.startActivity(intentDetail);
-        }
+
     }
 
 }

@@ -101,7 +101,7 @@ public class FollowingListFragment extends TweetsListFragment {
                         User follower = User.fromJSON(usersArray.getJSONObject(i));
 
                         // add the tweet model to data source
-                        followers.add(follower);
+                        followers.add(0, follower);
 
                         // notify adapter that we've added an item
                         adapter.notifyItemInserted(followers.size() - 1);

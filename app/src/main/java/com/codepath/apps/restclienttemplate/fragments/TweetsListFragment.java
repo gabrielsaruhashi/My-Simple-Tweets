@@ -186,7 +186,7 @@ public class TweetsListFragment extends Fragment {
                 }
             });
         } else {
-            client.geMentionsTimeline(new JsonHttpResponseHandler() {
+            client.getMentionsTimeline(new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     // Remember to CLEAR OUT old items before appending in the new ones

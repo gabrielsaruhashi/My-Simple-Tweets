@@ -10,17 +10,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/rlUserHeader">
+        <ImageView
+            android:id="@+id/ivProfileBackground"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="18dp"
+            app:srcCompat="@color/black"
+            />
 
         <ImageView
+            android:layout_below="@id/ivProfileBackground"
             android:id="@+id/ivProfileImage"
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
             android:layout_marginRight="10dp"
             android:src="@android:drawable/screen_background_light_transparent"/>
 
         <TextView
+            android:layout_below="@id/ivProfileBackground"
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,6 +45,8 @@
             android:layout_below="@id/tvName"
             android:text="Tagline"
             android:textSize="12sp"/>
+
+
     </RelativeLayout>
 
     <LinearLayout
@@ -79,6 +90,8 @@
         android:background="@android:color/white"
         android:layout_below="@+id/sliding_tabs"
         android:layout_alignParentBottom="true" />
+
+
 
 
     <!--
